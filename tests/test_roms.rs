@@ -18,8 +18,10 @@ fn emulation_loop(mut cpu: CPU, abort: Arc<Mutex<bool>>) {
     }
 }
 
-fn test_to_buffer(rom_path: String, n_redraws: u8) -> Result<bool, TryRecvError> {
-    let test_path = rom_path.replacen("roms", "tests", 1).replace(".gb", ".json");
+fn test_to_buffer(rom_path: String, n_redraws: u16) -> Result<bool, TryRecvError> {
+    let test_path = rom_path
+        .replacen("roms", "tests", 1)
+        .replace(".gb", ".json");
     let data = fs::read(rom_path).unwrap();
     let (tx, rx) = mpsc::sync_channel(0);
     let (_tx_events, rx_events) = mpsc::channel();
@@ -69,92 +71,116 @@ fn mooneye_acceptance_timer_tim00() {
 
 #[test]
 fn mooneye_acceptance_timer_tim00_div_trigger() {
-    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim00_div_trigger.gb".to_string(),10);
+    let res = test_to_buffer(
+        "roms/mooneye/acceptance/timer/tim00_div_trigger.gb".to_string(),
+        10,
+    );
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_timer_tim01() {
-    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim01.gb".to_string(),10);
+    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim01.gb".to_string(), 10);
     assert!(res.unwrap());
 }
 #[test]
 fn mooneye_acceptance_timer_tim01_div_trigger() {
-    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim01_div_trigger.gb".to_string(),10);
+    let res = test_to_buffer(
+        "roms/mooneye/acceptance/timer/tim01_div_trigger.gb".to_string(),
+        10,
+    );
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_timer_tim10() {
-    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim10.gb".to_string(),10);
+    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim10.gb".to_string(), 10);
     assert!(res.unwrap());
 }
 #[test]
 fn mooneye_acceptance_timer_tim10_div_trigger() {
-    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim10_div_trigger.gb".to_string(),10);
+    let res = test_to_buffer(
+        "roms/mooneye/acceptance/timer/tim10_div_trigger.gb".to_string(),
+        10,
+    );
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_timer_tim11() {
-    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim11.gb".to_string(),10);
+    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim11.gb".to_string(), 10);
     assert!(res.unwrap());
 }
 #[test]
 fn mooneye_acceptance_timer_tim11_div_trigger() {
-    let res = test_to_buffer("roms/mooneye/acceptance/timer/tim11_div_trigger.gb".to_string(),10);
+    let res = test_to_buffer(
+        "roms/mooneye/acceptance/timer/tim11_div_trigger.gb".to_string(),
+        10,
+    );
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_timer_tima_reload() {
-    let res = test_to_buffer("roms/mooneye/acceptance/timer/tima_reload.gb".to_string(),10);
+    let res = test_to_buffer(
+        "roms/mooneye/acceptance/timer/tima_reload.gb".to_string(),
+        10,
+    );
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_timer_div_write() {
-    let res = test_to_buffer("roms/mooneye/acceptance/timer/div_write.gb".to_string(),50);
+    let res = test_to_buffer("roms/mooneye/acceptance/timer/div_write.gb".to_string(), 50);
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_intr_timing() {
-    let res = test_to_buffer("roms/mooneye/acceptance/intr_timing.gb".to_string(),10);
+    let res = test_to_buffer("roms/mooneye/acceptance/intr_timing.gb".to_string(), 10);
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_if_ie_registers() {
-    let res = test_to_buffer("roms/mooneye/acceptance/if_ie_registers.gb".to_string(),10);
+    let res = test_to_buffer("roms/mooneye/acceptance/if_ie_registers.gb".to_string(), 10);
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_ppu_intr_1_2_timing_GS() {
-    let res = test_to_buffer("roms/mooneye/acceptance/ppu/intr_1_2_timing-GS.gb".to_string(),10);
+    let res = test_to_buffer(
+        "roms/mooneye/acceptance/ppu/intr_1_2_timing-GS.gb".to_string(),
+        10,
+    );
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_ppu_intr_2_0_timing() {
-    let res = test_to_buffer("roms/mooneye/acceptance/ppu/intr_2_0_timing.gb".to_string(),10);
+    let res = test_to_buffer(
+        "roms/mooneye/acceptance/ppu/intr_2_0_timing.gb".to_string(),
+        10,
+    );
     assert!(res.unwrap());
 }
 
 #[test]
 fn mooneye_acceptance_bits_reg_f() {
-    let res = test_to_buffer("roms/mooneye/acceptance/bits/reg_f.gb".to_string(),10);
+    let res = test_to_buffer("roms/mooneye/acceptance/bits/reg_f.gb".to_string(), 10);
     assert!(res.unwrap());
 }
 #[test]
-fn test_mooneye_acceptance_oam_dma_basic() {
-    let res = test_to_buffer("roms/mooneye/acceptance/oam_dma/basic.gb".to_string(),10);
+fn mooneye_acceptance_oam_dma_basic() {
+    let res = test_to_buffer("roms/mooneye/acceptance/oam_dma/basic.gb".to_string(), 10);
     assert!(res.unwrap());
 }
 #[test]
-fn test_mooneye_acceptance_oam_dma_reg_read() {
-    let res = test_to_buffer("roms/mooneye/acceptance/oam_dma/reg_read.gb".to_string(),10);
+fn mooneye_acceptance_oam_dma_reg_read() {
+    let res = test_to_buffer(
+        "roms/mooneye/acceptance/oam_dma/reg_read.gb".to_string(),
+        10,
+    );
     assert!(res.unwrap());
 }
 
@@ -183,7 +209,7 @@ fn test_mooneye_acceptance_oam_dma_reg_read() {
 //}
 
 //#[test]
-//Todo: fn test_mooneye_acceptance_oam_dma_sources_GS() {
+//Todo: fn mooneye_acceptance_oam_dma_sources_GS() {
 //    let res = test_to_buffer("roms/mooneye/acceptance/oam_dma/sources-GS.gb".to_string());
 //    assert!(res.unwrap());
 //}
