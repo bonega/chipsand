@@ -59,10 +59,147 @@ fn test_to_buffer(rom_path: String, n_redraws: u16) -> Result<bool, TryRecvError
 
 #[test]
 fn gb_test_roms_cpu_instrs_individual_01_special() {
-    let res = test_to_buffer("roms/gb-test-roms/cpu_instrs/individual/01-special.gb".to_string(), 200);
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/01-special.gb".to_string(),
+        200,
+    );
     assert!(res.unwrap());
 }
 
+#[test]
+fn gb_test_roms_cpu_instrs_individual_02_interrupts() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/02-interrupts.gb".to_string(),
+        50,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_cpu_instrs_individual_03_op_sp_hl() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/03-op sp,hl.gb".to_string(),
+        200,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_cpu_instrs_individual_04_op_r_imm() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/04-op r,imm.gb".to_string(),
+        200,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_cpu_instrs_individual_05_op_rp() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/05-op rp.gb".to_string(),
+        250,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_cpu_instrs_individual_06_ld_r_r() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/06-ld r,r.gb".to_string(),
+        50,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_cpu_instrs_individual_07_jr_jp_call_ret_rst() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/07-jr,jp,call,ret,rst.gb".to_string(),
+        50,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_cpu_instrs_individual_08_misc_instrs() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/08-misc instrs.gb".to_string(),
+        50,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_cpu_instrs_individual_09_op_r_r() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/09-op r,r.gb".to_string(),
+        550,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_cpu_instrs_individual_10_bit_ops() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/10-bit ops.gb".to_string(),
+        850,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_cpu_instrs_individual_11_op_a_hl() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/cpu_instrs/individual/11-op a,(hl).gb".to_string(),
+        1050,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_instr_timing_instr_timing() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/instr_timing/instr_timing.gb".to_string(),
+        50,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_mem_timing_individual_01_read_timing() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/mem_timing/individual/01-read_timing.gb".to_string(),
+        50,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_mem_timing_individual_02_write_timing() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/mem_timing/individual/02-write_timing.gb".to_string(),
+        50,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_mem_timing_individual_03_modify_timing() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/mem_timing/individual/03-modify_timing.gb".to_string(),
+        50,
+    );
+    assert!(res.unwrap());
+}
+
+#[test]
+fn gb_test_roms_mem_timing_2_mem_timing() {
+    let res = test_to_buffer(
+        "roms/gb-test-roms/mem_timing-2/mem_timing.gb".to_string(),
+        250,
+    );
+    assert!(res.unwrap());
+}
 #[test]
 fn mooneye_acceptance_timer_tim00() {
     let res = test_to_buffer("roms/mooneye/acceptance/timer/tim00.gb".to_string(), 10);
