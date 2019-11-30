@@ -1,4 +1,4 @@
-use crate::{Interrupt, Pixel, ScreenSender};
+use crate::{Interrupt, Pixel, ScreenSender, BLANK_SCREEN};
 use std::collections::VecDeque;
 
 pub struct Control {
@@ -425,7 +425,13 @@ impl PPU {
                     self.oam[adr as usize - 0xFE00] = v;
                 }
             }
-            0xFF40 => self.control.write_word(v),
+            0xFF40 => {
+                let prev_lcd_en = self.control.lcd_en;
+                self.control.write_word(v);
+                if prev_lcd_en && !self.control.lcd_en {
+                    self.screen_sender.send(BLANK_SCREEN);
+                }
+            }
             0xFF41 => self.lcd_stat.write_word(v),
             0xFF42 => self.scy = v,
             0xFF43 => self.scx = v,

@@ -16,6 +16,7 @@ pub mod timer;
 
 pub type Pixel = u8;
 pub type ScreenBuffer = [[u8; 160]; 144];
+pub const BLANK_SCREEN: ScreenBuffer = [[0; 160]; 144];
 pub type ScreenSender = SyncSender<[[Pixel; 160]; 144]>;
 pub type InputReceiver = Receiver<Control>;
 
