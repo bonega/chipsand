@@ -1,4 +1,4 @@
-use std::sync::mpsc::TryRecvError;
+use std::sync::mpsc::{TryRecvError, RecvError};
 use std::sync::{mpsc, Arc, Mutex};
 use std::{fs, thread, time};
 
@@ -35,25 +35,20 @@ fn test_to_buffer(rom_path: String, n_redraws: u16) -> Result<bool, TryRecvError
         emulation_loop(cpu, cpu_abort);
     });
 
-    let mut redraws = 0;
-    loop {
-        thread::sleep(time::Duration::from_millis(1));
-        match &rx.try_recv() {
-            Ok(pixels) => {
-                redraws += 1;
-                if redraws == n_redraws {
-                    let mut abort = abort.lock().unwrap();
-                    *abort = true;
-                    let pixs = screen_buffer_to_vec(pixels);
+    for _ in 0..n_redraws - 1 {
+        &rx.recv()?;
+    };
+    match &rx.recv() {
+        Ok(pixels) => {
+            let mut abort = abort.lock().unwrap();
+            *abort = true;
+            let pixels = screen_buffer_to_vec(pixels);
 
-                    let buffer = fs::File::open(dbg!(test_path));
-                    let x: Vec<u8> = serde_json::from_reader(buffer.unwrap()).unwrap();
-                    break Ok(pixs.eq(&x));
-                }
-            }
-            Err(TryRecvError::Empty) => {}
-            Err(TryRecvError::Disconnected) => panic!("Channel disconnect"),
-        };
+            let buffer = fs::File::open(dbg!(test_path));
+            let x: Vec<u8> = serde_json::from_reader(buffer.unwrap()).unwrap();
+            return Ok(pixels.eq(&x));
+        }
+        Err(_) => panic!("Failed to communicate over pixel-channel")
     }
 }
 
@@ -200,6 +195,7 @@ fn gb_test_roms_mem_timing_2_mem_timing() {
     );
     assert!(res.unwrap());
 }
+
 #[test]
 fn mooneye_acceptance_timer_tim00() {
     let res = test_to_buffer("roms/mooneye/acceptance/timer/tim00.gb".to_string(), 10);
@@ -220,6 +216,7 @@ fn mooneye_acceptance_timer_tim01() {
     let res = test_to_buffer("roms/mooneye/acceptance/timer/tim01.gb".to_string(), 10);
     assert!(res.unwrap());
 }
+
 #[test]
 fn mooneye_acceptance_timer_tim01_div_trigger() {
     let res = test_to_buffer(
@@ -234,6 +231,7 @@ fn mooneye_acceptance_timer_tim10() {
     let res = test_to_buffer("roms/mooneye/acceptance/timer/tim10.gb".to_string(), 10);
     assert!(res.unwrap());
 }
+
 #[test]
 fn mooneye_acceptance_timer_tim10_div_trigger() {
     let res = test_to_buffer(
@@ -248,6 +246,7 @@ fn mooneye_acceptance_timer_tim11() {
     let res = test_to_buffer("roms/mooneye/acceptance/timer/tim11.gb".to_string(), 10);
     assert!(res.unwrap());
 }
+
 #[test]
 fn mooneye_acceptance_timer_tim11_div_trigger() {
     let res = test_to_buffer(
@@ -307,11 +306,13 @@ fn mooneye_acceptance_bits_reg_f() {
     let res = test_to_buffer("roms/mooneye/acceptance/bits/reg_f.gb".to_string(), 10);
     assert!(res.unwrap());
 }
+
 #[test]
 fn mooneye_acceptance_oam_dma_basic() {
     let res = test_to_buffer("roms/mooneye/acceptance/oam_dma/basic.gb".to_string(), 10);
     assert!(res.unwrap());
 }
+
 #[test]
 fn mooneye_acceptance_oam_dma_reg_read() {
     let res = test_to_buffer(
