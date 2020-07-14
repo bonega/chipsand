@@ -58,7 +58,6 @@ impl MMU {
             0xA000..=0xBFFF => self.mbc.read_word(adr),
             0xC000..=0xDFFF => self.wram[(adr - 0xC000) as usize],
             0xE000..=0xFDFF => self.wram[(adr - 0xE000) as usize],
-            0xFE00..=0xFE9F => self.oam[adr as usize - 0xFE00],
             0xFEA0..=0xFEFF => 0x00, // Undocumented
             0xFF00 => self.joypad.read_word(),
             0xFF01..=0xFF02 => self.serial.read_word(adr),
@@ -84,7 +83,6 @@ impl MMU {
             0xA000..=0xBFFF => self.mbc.write_word(adr, val),
             0xC000..=0xDFFF => self.wram[(adr - 0xC000) as usize] = val,
             0xE000..=0xFDFF => self.wram[(adr - 0xE000) as usize] = val,
-            0xFE00..=0xFE9F => self.oam[adr as usize - 0xFE00] = val,
             0xFEA0..=0xFEFF => {} //undocumented
             0xFF00 => self.joypad.write_word(val),
             0xFF01..=0xFF02 => self.serial.write_word(adr, val),
