@@ -431,6 +431,10 @@ impl PPU {
                 if prev_lcd_en && !self.control.lcd_en {
                     self.screen_sender.send(BLANK_SCREEN);
                 }
+                self.ly = 0;
+                self.pixel_fifo.reset(0);
+                self.set_next_state(Mode::OAM);
+                self.cycles_elapsed = 0;
             }
             0xFF41 => self.lcd_stat.write_word(v),
             0xFF42 => self.scy = v,
