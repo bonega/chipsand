@@ -1,8 +1,6 @@
-use sdl2::rect::Rect;
 use sdl2::render::Canvas;
-use sdl2::surface::Surface;
 use sdl2::video::Window;
-use sdl2::{pixels, EventPump};
+use sdl2::{pixels};
 use std::error::Error;
 
 const SCALE_FACTOR: usize = 4;
@@ -33,7 +31,7 @@ impl Display {
             .unwrap();
 
         let mut canvas = window.into_canvas().build().unwrap();
-        canvas.set_scale(4 as f32, 4 as f32);
+        canvas.set_scale(4 as f32, 4 as f32).unwrap();
         canvas.clear();
         canvas.present();
 
@@ -53,7 +51,7 @@ impl Display {
                 self.canvas
                     .set_draw_color(pixels::Color::RGB(col[0], col[1], col[2]));
                 self.canvas
-                    .draw_point(sdl2::rect::Point::new(x as i32, y as i32));
+                    .draw_point(sdl2::rect::Point::new(x as i32, y as i32)).unwrap();
             }
         }
         self.canvas.present();
@@ -78,7 +76,7 @@ impl Display {
             .unwrap();
             surf.save_bmp("test.bmp")?;
         }
-        self.canvas.set_scale(scale_x, scale_y);
+        self.canvas.set_scale(scale_x, scale_y)?;
         Ok(())
     }
 }

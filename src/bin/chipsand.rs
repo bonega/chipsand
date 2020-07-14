@@ -57,7 +57,7 @@ fn main() {
                 std::process::exit(0);
             }
             if let Some(x) = x {
-                tx_events.send(x);
+                tx_events.send(x).unwrap();
             }
         }
         match &rx.try_recv() {

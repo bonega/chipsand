@@ -1,4 +1,4 @@
-use crate::{Interrupt, Pixel, ScreenSender, BLANK_SCREEN};
+use crate::{Interrupt, ScreenSender, BLANK_SCREEN};
 use std::collections::VecDeque;
 
 pub struct Control {
@@ -303,16 +303,17 @@ impl PPU {
         }
         let mut interrupt = 0;
         self.cycles_elapsed += 4;
+        let enter = self.is_state_enter();
         match self.lcd_stat.mode {
             Mode::OAM => {
-                if self.is_state_enter() && self.lcd_stat.int_oam {
+                if enter && self.lcd_stat.int_oam {
                     interrupt = Interrupt::LCDStat as u8;
-                } else if self.cycles_elapsed == 80 {
+                } else if self.cycles_elapsed==80 {
                     self.set_next_state(Mode::TRANSFER);
                 }
             }
             Mode::TRANSFER => {
-                if self.is_state_enter() {
+                if enter {
                     self.fetcher.reset(self.control.bg_map, self.scx, self.ly);
                     self.pixel_fifo.reset(self.scx);
                 }
@@ -341,7 +342,7 @@ impl PPU {
                 }
             }
             Mode::HBlank => {
-                if self.is_state_enter() && self.lcd_stat.int_hblank {
+                if enter && self.lcd_stat.int_hblank {
                     interrupt = Interrupt::LCDStat as u8;
                 } else if self.cycles_elapsed == 456 {
                     self.cycles_elapsed = 0;
@@ -352,8 +353,8 @@ impl PPU {
                 }
             }
             Mode::VBlank => {
-                if self.is_state_enter() {
-                    self.screen_sender.send(self.pixel_fifo.screen);
+                if enter {
+                    self.screen_sender.send(self.pixel_fifo.screen).unwrap();
                     interrupt |= Interrupt::VBLANK as u8;
                     if self.lcd_stat.int_vblank || self.lcd_stat.int_oam {
                         interrupt |= Interrupt::LCDStat as u8;
@@ -395,7 +396,7 @@ impl PPU {
                 }
             }
             0xFF40 => self.control.read_word(),
-            0xFF41 => dbg!(self.lcd_stat.read_word()),
+            0xFF41 => self.lcd_stat.read_word(),
             0xFF42 => self.scy,
             0xFF43 => self.scx,
             0xFF44 => self.ly,
@@ -429,7 +430,7 @@ impl PPU {
                 let prev_lcd_en = self.control.lcd_en;
                 self.control.write_word(v);
                 if prev_lcd_en && !self.control.lcd_en {
-                    self.screen_sender.send(BLANK_SCREEN);
+                    self.screen_sender.send(BLANK_SCREEN).unwrap();
                 }
                 self.ly = 0;
                 self.pixel_fifo.reset(0);

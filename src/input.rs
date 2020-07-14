@@ -2,7 +2,7 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 
 use crate::joypad;
-use crate::joypad::{Joypad, Key};
+use crate::joypad::{Key};
 
 #[derive(Debug, PartialEq)]
 pub enum Control {

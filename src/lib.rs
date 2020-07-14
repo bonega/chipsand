@@ -42,6 +42,6 @@ pub fn screen_buffer_to_vec(pixels: &ScreenBuffer) -> Vec<u8> {
 
 pub fn save_screen_buffer(pixels: &ScreenBuffer, path: String) {
     let pixs = screen_buffer_to_vec(pixels);
-    let mut buffer = fs::File::create(path);
-    serde_json::to_writer(buffer.unwrap(), &pixs);
+    let buffer = fs::File::create(path);
+    serde_json::to_writer(buffer.unwrap(), &pixs).unwrap();
 }

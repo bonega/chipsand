@@ -43,13 +43,13 @@ pub trait Operand {
 }
 
 impl Operand for R8 {
-    fn to_str(&self, cpu: &CPU) -> String {
+    fn to_str(&self, _cpu: &CPU) -> String {
         format!("{:?}", self)
     }
 }
 
 impl Operand for R16 {
-    fn to_str(&self, cpu: &CPU) -> String {
+    fn to_str(&self, _cpu: &CPU) -> String {
         format!("{:?}", self)
     }
 }

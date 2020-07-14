@@ -44,7 +44,7 @@ fn test_to_buffer(rom_path: String, n_redraws: u16) -> Result<bool, TryRecvError
             *abort = true;
             let pixels = screen_buffer_to_vec(pixels);
 
-            let buffer = fs::File::open(dbg!(test_path));
+            let buffer = fs::File::open(test_path);
             let x: Vec<u8> = serde_json::from_reader(buffer.unwrap()).unwrap();
             return Ok(pixels.eq(&x));
         }

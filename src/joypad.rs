@@ -22,6 +22,15 @@ pub struct Joypad {
     prev_state: u8,
 }
 
+const UP_MASK: u8 = 0b1000;
+const DOWN_MASK: u8 = 0b0100;
+const LEFT_MASK: u8 = 0b0010;
+const RIGHT_MASK: u8 = 0b0001;
+const START_MASK: u8 = 0b1000;
+const SELECT_MASK: u8 = 0b0100;
+const B_MASK: u8 = 0b0010;
+const A_MASK: u8 = 0b0001;
+
 impl Joypad {
     pub fn new(input_receiver: InputReceiver) -> Self {
         Joypad {
@@ -52,28 +61,28 @@ impl Joypad {
     pub fn key_up(&mut self, key: Key) {
         use Key::*;
         match key {
-            Up => self.directions |= 0b1000,
-            Down => self.directions |= 0b0100,
-            Left => self.directions |= 0b0010,
-            Right => self.directions |= 0b0001,
-            Start => self.buttons |= 0b1000,
-            Select => self.buttons |= 0b0100,
-            B => self.buttons |= 0b0010,
-            A => self.buttons |= 0b0001,
+            Up => self.directions |= UP_MASK,
+            Down => self.directions |= DOWN_MASK,
+            Left => self.directions |= LEFT_MASK,
+            Right => self.directions |= RIGHT_MASK,
+            Start => self.buttons |= START_MASK,
+            Select => self.buttons |= SELECT_MASK,
+            B => self.buttons |= B_MASK,
+            A => self.buttons |= A_MASK,
         }
     }
 
     pub fn key_down(&mut self, key: Key) {
         use Key::*;
         match key {
-            Up => self.directions &= !0b1000,
-            Down => self.directions &= !0b0100,
-            Left => self.directions &= !0b0010,
-            Right => self.directions &= !0b0001,
-            Start => self.buttons &= !0b1000,
-            Select => self.buttons &= !0b0100,
-            B => self.buttons &= !0b0010,
-            A => self.buttons &= !0b0001,
+            Up => self.directions &= !UP_MASK,
+            Down => self.directions &= !DOWN_MASK,
+            Left => self.directions &= !LEFT_MASK,
+            Right => self.directions &= !RIGHT_MASK,
+            Start => self.buttons &= !START_MASK,
+            Select => self.buttons &= !SELECT_MASK,
+            B => self.buttons &= !B_MASK,
+            A => self.buttons &= !A_MASK,
         }
     }
 
