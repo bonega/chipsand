@@ -196,18 +196,10 @@ impl Fetcher {
 
     fn get_tile_adr(&self, tile_sel: bool) -> usize {
         let tile_index = self.tile_index as usize;
-        let adr = if tile_sel {
-            if tile_index < 0x80 {
-                0x000 + tile_index * 16
-            } else {
-                0x800 + (tile_index - 0x80) * 16
-            }
-        } else {
-            if tile_index < 0x80 {
-                0x1000 + tile_index * 16
-            } else {
-                0x800 + (tile_index - 0x80) * 16
-            }
+        let adr = match (tile_sel, tile_index < 0x80) {
+            (true, true) => 0x000 + tile_index * 16,
+            (false, true) => 0x1000 + tile_index * 16,
+            (_, false) => 0x800 + (tile_index - 0x80) * 16,
         };
         adr as usize + self.y_offset as usize
     }
