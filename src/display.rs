@@ -1,16 +1,15 @@
 use sdl2::render::Canvas;
 use sdl2::video::Window;
-use sdl2::{pixels};
 use std::error::Error;
 
 const SCALE_FACTOR: usize = 4;
 const SCREEN_WIDTH: usize = 160;
 const SCREEN_HEIGHT: usize = 144;
 
-const WHITE: [u8; 3] = [224, 248, 208];
-const LIGHT_GRAY: [u8; 3] = [136, 192, 112];
-const DARK_GRAY: [u8; 3] = [52, 104, 86];
-const BLACK: [u8; 3] = [8, 24, 32];
+const WHITE: (u8, u8, u8) = (224, 248, 208);
+const LIGHT_GRAY: (u8, u8, u8) = (136, 192, 112);
+const DARK_GRAY: (u8, u8, u8) = (52, 104, 86);
+const BLACK: (u8, u8, u8) = (8, 24, 32);
 
 pub struct Display {
     canvas: Canvas<Window>,
@@ -48,10 +47,8 @@ impl Display {
                     3 => BLACK,
                     _ => panic!(),
                 };
-                self.canvas
-                    .set_draw_color(pixels::Color::RGB(col[0], col[1], col[2]));
-                self.canvas
-                    .draw_point(sdl2::rect::Point::new(x as i32, y as i32)).unwrap();
+                self.canvas.set_draw_color(col);
+                self.canvas.draw_point((x as i32, y as i32)).unwrap();
             }
         }
         self.canvas.present();
@@ -72,8 +69,7 @@ impl Display {
                 height,
                 pitch as u32,
                 pixel_format,
-            )
-            .unwrap();
+            ).unwrap();
             surf.save_bmp("test.bmp")?;
         }
         self.canvas.set_scale(scale_x, scale_y)?;
