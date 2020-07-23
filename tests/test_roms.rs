@@ -1,6 +1,6 @@
-use std::sync::mpsc::{TryRecvError, RecvError};
 use std::sync::{mpsc, Arc, Mutex};
-use std::{fs, thread, time};
+use std::{fs, thread};
+use anyhow::{Result};
 
 use serde_json;
 
@@ -11,18 +11,18 @@ use chipsandlib::screen_buffer_to_vec;
 fn emulation_loop(mut cpu: CPU, abort: Arc<Mutex<bool>>) {
     loop {
         cpu.cycle();
-        let x = *abort.lock().unwrap();
-        if x {
-            break;
+        if *abort.lock().unwrap() {
+            return;
         }
     }
 }
 
-fn test_to_buffer(rom_path: String, n_redraws: u16) -> Result<bool, TryRecvError> {
+fn test_to_buffer(rom_path: String, n_redraws: u16) -> Result<bool> {
     let test_path = rom_path
         .replacen("roms", "tests", 1)
         .replace(".gb", ".json");
-    let data = fs::read(rom_path).unwrap();
+    let buffer = fs::File::open(test_path)?;
+    let data = fs::read(rom_path)?;
     let (tx, rx) = mpsc::sync_channel(0);
     let (_tx_events, rx_events) = mpsc::channel();
     let abort = Arc::new(Mutex::new(false));
@@ -44,8 +44,7 @@ fn test_to_buffer(rom_path: String, n_redraws: u16) -> Result<bool, TryRecvError
             *abort = true;
             let pixels = screen_buffer_to_vec(pixels);
 
-            let buffer = fs::File::open(test_path);
-            let x: Vec<u8> = serde_json::from_reader(buffer.unwrap()).unwrap();
+            let x: Vec<u8> = serde_json::from_reader(buffer)?;
             return Ok(pixels.eq(&x));
         }
         Err(_) => panic!("Failed to communicate over pixel-channel")
