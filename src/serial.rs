@@ -58,15 +58,19 @@ impl Serial {
 
     pub fn tick(&mut self) -> Interrupt {
         if self.sc.sio_en {
-            self.counter += 1;
-            if self.counter % 128 == 0 {
-                self.sent = (self.sent << 1) | (self.sb >> 7);
-                self.sb = (self.sb << 1) & 0xFF;
-                if self.counter == 8 * 128 {
-                    self.counter = 0;
-                    self.sent = 0;
-                    self.sc.sio_en = false;
-                    return Interrupt::SERIAL;
+            // TODO: implement support for serial
+            // this is only provides a channel for writing
+            if self.sc.sio_clk {
+                self.counter += 1;
+                if self.counter % 128 == 0 {
+                    self.sent = (self.sent << 1) | (self.sb >> 7);
+                    self.sb = (self.sb << 1) & 0xFF;
+                    if self.counter == 8 * 128 {
+                        self.counter = 0;
+                        self.sent = 0;
+                        self.sc.sio_en = false;
+                        return Interrupt::SERIAL;
+                    }
                 }
             }
         }
